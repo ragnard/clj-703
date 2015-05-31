@@ -33,7 +33,7 @@
                                                     end (System/currentTimeMillis)]
                                                 (println (- end start)))"
                                        ns)])]
-    (when-not (string/blank? err)
+    (when-not (or (string/blank? err) (re-seq #"WARNING" err))
       (throw (ex-info (format "Error running test using lein: %s" err)
                {:out out
                 :err err})))
