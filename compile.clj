@@ -10,11 +10,7 @@
 (defn classpath
   [profiles]
   (let [profiles (string/join "," (into ["-user" "-base"] (map #(str "+" %) profiles)))
-        {:keys [out err]} (apply sh ["lein" "with-profile" profiles "classpath"])]
-    (when-not (string/blank? err)
-      (throw (ex-info (format "Error constructing classpath using lein: %s" err)
-               {:out out
-                :err err})))
+        {:keys [out]} (apply sh ["lein" "with-profile" profiles "classpath"])]
     (string/trim out)))
 
 (defn debug [x] (println x) x)
