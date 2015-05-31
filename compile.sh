@@ -1,3 +1,4 @@
+#!/usr/bin/env bash
 declare -A tests
 tests[aleph]=aleph.http
 tests[incanter]=incanter.core
