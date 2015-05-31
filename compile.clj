@@ -4,19 +4,20 @@
   '[clojure.java.shell :as shell :refer [sh]])
 
 (def tests
-  {"aleph"    'aleph.http
-   "incanter" 'incanter.core})
+  {"incanter" 'incanter.core
+   "aleph"    'aleph.http})
 
 (defn classpath
   [profiles]
-  (let [{:keys [out err]} (apply sh (if profiles
-                                      ["lein" "with-profile" (string/join "," profiles) "classpath"]
-                                      ["lein" "classpath"]))]
+  (let [profiles (string/join "," (into ["-user" "-base"] (map #(str "+" %) profiles)))
+        {:keys [out err]} (apply sh ["lein" "with-profile" profiles "classpath"])]
     (when-not (string/blank? err)
       (throw (ex-info (format "Error constructing classpath using lein: %s" err)
                {:out out
                 :err err})))
     (string/trim out)))
+
+(defn debug [x] (println x) x)
 
 (defn run-test
   [ns profiles]
@@ -24,7 +25,7 @@
         _ (sh "rm" "-rf" (str out-dir))
         _ (.mkdirs out-dir)
         {:keys [out err]} (apply sh ["java"
-                                     "-cp" (classpath profiles)
+                                     "-cp" (debug (classpath profiles))
                                      (format "-Dclojure.compile.path=%s" out-dir)
                                      "clojure.main"
                                      "-e"
