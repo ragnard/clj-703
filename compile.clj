@@ -24,8 +24,9 @@
   (let [out-dir (io/file "output")
         _ (sh "rm" "-rf" (str out-dir))
         _ (.mkdirs out-dir)
+        cp (classpath profiles)
         {:keys [out err]} (apply sh ["java"
-                                     "-cp" (classpath profiles)
+                                     "-cp" cp
                                      (format "-Dclojure.compile.path=%s" out-dir)
                                      "clojure.main"
                                      "-e"
@@ -36,7 +37,8 @@
                                        ns)])]
     (when-not (or (string/blank? err) (re-seq #"WARNING" err))
       (throw (ex-info (format "Error running test using lein: %s" err)
-               {:out out
+               {:classpath cp
+                :out out
                 :err err})))
     [ns (Integer/parseInt (string/trim out))]))
 
