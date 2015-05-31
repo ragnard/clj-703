@@ -6,3 +6,4 @@ Simple performance test for CLJ-703.
 
 ./compile.sh
 
+Please report results at http://goo.gl/forms/0b8SVt2pyN
