@@ -25,7 +25,7 @@
         _ (sh "rm" "-rf" (str out-dir))
         _ (.mkdirs out-dir)
         {:keys [out err]} (apply sh ["java"
-                                     "-cp" (debug (classpath profiles))
+                                     "-cp" (classpath profiles)
                                      (format "-Dclojure.compile.path=%s" out-dir)
                                      "clojure.main"
                                      "-e"
